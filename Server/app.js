@@ -116,12 +116,20 @@ async function start() {
 
     // 🔥 ADD OTP COLUMNS TO EXISTING USERS TABLE
     try {
+      // Add columns if they don't exist
       await dbconnection.query(`
-        ALTER TABLE users 
-        ADD COLUMN IF NOT EXISTS reset_otp VARCHAR(255),
-        ADD COLUMN IF NOT EXISTS otp_expiration TIMESTAMP;
-      `);
-      console.log("✅ OTP columns verified/added!");
+    ALTER TABLE users 
+    ADD COLUMN IF NOT EXISTS reset_otp VARCHAR(255),
+    ADD COLUMN IF NOT EXISTS otp_expiration TIMESTAMP;
+  `);
+
+      // Fix column size if it's too small
+      await dbconnection.query(`
+    ALTER TABLE users 
+    ALTER COLUMN reset_otp TYPE VARCHAR(255);
+  `);
+
+      console.log("✅ OTP columns verified/fixed!");
     } catch (error) {
       console.log("⚠️ OTP columns note:", error.message);
     }
