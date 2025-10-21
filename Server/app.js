@@ -114,6 +114,18 @@ async function start() {
     // Create tables
     await createTablesIfNotExist();
 
+    // 🔥 ADD OTP COLUMNS TO EXISTING USERS TABLE
+    try {
+      await dbconnection.query(`
+        ALTER TABLE users 
+        ADD COLUMN IF NOT EXISTS reset_otp VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS otp_expiration TIMESTAMP;
+      `);
+      console.log("✅ OTP columns verified/added!");
+    } catch (error) {
+      console.log("⚠️ OTP columns note:", error.message);
+    }
+
     app.listen(PORT);
     console.log(`✅ Server is running on port ${PORT}`);
   } catch (error) {
@@ -121,6 +133,8 @@ async function start() {
   }
 }
 start();
+
+// answer routes middleware fil
 
 // const express = require("express");
 // const cors = require("cors");
