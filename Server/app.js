@@ -32,7 +32,7 @@ async function createTablesIfNotExist() {
         lastname VARCHAR(20) NOT NULL,
         email VARCHAR(40) NOT NULL UNIQUE,
         user_password VARCHAR(100) NOT NULL,
-        reset_otp VARCHAR(6),
+        reset_otp VARCHAR(255),
         otp_expiration TIMESTAMP
       )
     `);
